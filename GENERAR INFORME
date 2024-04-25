@@ -1,0 +1,3 @@
+CALL GenerarInformeVentas();
+Este procedimiento almacenado te permitirá generar un informe de ventas totales por empleado 
+utilizando un cursor en tu base de datos de Informes de Venta o Comisiones para Empleados.
