@@ -1,0 +1,38 @@
+DELIMITER //
+
+CREATE PROCEDURE GenerarInformeVentas()
+BEGIN
+    
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE nombre_empleado VARCHAR(100);
+    DECLARE total_ventas DECIMAL(10, 2);
+
+    DECLARE ventas_cursor CURSOR FOR
+        SELECT Empleados.nombre, SUM(Ventas.monto) AS total_ventas
+        FROM Ventas
+        JOIN Empleados ON Ventas.id_empleado = Empleados.id
+        GROUP BY Empleados.id;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+    OPEN ventas_cursor;
+
+    read_loop: LOOP
+      
+        FETCH ventas_cursor INTO nombre_empleado, total_ventas;
+
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+
+        SELECT CONCAT('Empleado: ', nombre_empleado, ', Total de ventas: ', total_ventas);
+
+    END LOOP;
+
+    CLOSE ventas_cursor;
+END //
+
+DELIMITER ;
+
+este procedimiento almacenado se utiliza para generar un informe de ventas totales por empleado, 
+recorriendo las filas de la tabla de ventas usando un cursor y mostrando la información de cada empleado y su total de ventas.
